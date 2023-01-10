@@ -1,13 +1,8 @@
 class ApiRequestError(Exception):
-    """Ошибка запроса."""
-    pass
-
-
-class CurrentDateError(Exception):
-    """Ошибка ключа current_date."""
+    """Не удалось отправить запрос на api эндпоинт."""
     pass
 
 
 class MessageNotSentError(Exception):
-    """Ошибка отправки сообщение в телеграмм."""
+    """Не удалось отправить сообщение в телеграмм."""
     pass
