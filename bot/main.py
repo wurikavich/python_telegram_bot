@@ -18,10 +18,13 @@ def send_message(bot, message):
         bot.send_message(config.TELEGRAM_ID, text=message)
     except telegram.error.TelegramError(message) as error:
         raise MessageNotSentError(
-            f'Сообщение "{message}" не удалось отправить! Ошибка: {error}.')
+            f'Сообщение "{message}" не удалось отправить! Ошибка: {error}.'
+        )
     else:
-        logger.info(f'Сообщение "{message}", успешно отправлено '
-                    f'пользователю с ID={config.TELEGRAM_ID}')
+        logger.info(
+            f'Сообщение "{message}", успешно отправлено '
+            f'пользователю с ID={config.TELEGRAM_ID}'
+        )
 
 
 def get_api_answer(current_timestamp):
@@ -34,12 +37,15 @@ def get_api_answer(current_timestamp):
     try:
         homework = requests.get(**api_params)
         if homework.status_code != HTTPStatus.OK:
-            raise Exception('Не удалось получить данные от сервера! '
-                            f'Код ответа сервера - {homework.status_code}.')
+            raise Exception(
+                'Не удалось получить данные от сервера! '
+                f'Код ответа сервера - {homework.status_code}.'
+            )
         return homework.json()
     except Exception as error:
-        raise ApiRequestError(f'Не удалось отправить запрос - {api_params}!'
-                              f' Ошибка - {error}.')
+        raise ApiRequestError(
+            f'Не удалось отправить запрос - {api_params}! Ошибка - {error}.'
+        )
 
 
 def check_response(response):
@@ -67,23 +73,28 @@ def parse_status(homework):
     homeworks_comment = homework.get('reviewer_comment')
     verdict = config.HOMEWORK_VERDICTS[homework_status]
     logger.info(f'Статус проверки "{homework_name}" изменился - {verdict}')
-    if verdict == config.HOMEWORK_VERDICTS['approved']:
-        return (f'Молодец! Ты успешно справился этим проектом.\n'
-                f'Ревьер оставил тебе комментарий: "{homeworks_comment}".\n'
-                f'Впереди ждут новые трудности и новые победы.')
-    elif verdict == config.HOMEWORK_VERDICTS['rejected']:
-        return (f'Не буду томить ожиданием. Ревьюер вернул проект на доработку'
-                f' с комментарием: "{homeworks_comment}".\n'
-                f'Это не повод расстраиваться и всё бросать, прежде всего это '
-                f'новый опыт, ведь дальше будет сложнее. '
-                f'Отдохни, потом преступи к работе над ошибками. Удачи!')
+    if verdict == config.HOMEWORK_VERDICTS["approved"]:
+        return (
+            f'Молодец! Ты успешно справился этим проектом.\n'
+            f'Ревьер оставил тебе комментарий: "{homeworks_comment}".\n'
+            f'Впереди ждут новые трудности и новые победы.'
+        )
+    elif verdict == config.HOMEWORK_VERDICTS["rejected"]:
+        return (
+            f'Не буду томить ожиданием. Ревьюер вернул проект на доработку'
+            f' с комментарием: "{homeworks_comment}".\n'
+            f'Это не повод расстраиваться и всё бросать, прежде всего это '
+            f'новый опыт, ведь дальше будет сложнее. '
+            f'Отдохни, потом преступи к работе над ошибками. Удачи!'
+        )
     return f'Статус проверки "{homework_name}" изменился - {verdict}'
 
 
 def check_tokens():
     """Проверяет доступность переменных окружения."""
-    return all([config.YANDEX_TOKEN, config.TELEGRAM_BOT_TOKEN,
-                config.TELEGRAM_ID])
+    return all(
+        [config.YANDEX_TOKEN, config.TELEGRAM_BOT_TOKEN, config.TELEGRAM_ID]
+    )
 
 
 def main():
@@ -113,17 +124,17 @@ def main():
 if __name__ == '__main__':
     logging.basicConfig(
         level=logging.INFO,
-        format=('%(asctime)s,'
-                ' %(levelname)s,'
-                ' %(message)s,'
-                ' %(funcName)s,'
-                ' %(lineno)d'),
+        format=(
+            '%(asctime)s,'
+            ' %(levelname)s,'
+            ' %(message)s,'
+            ' %(funcName)s,'
+            ' %(lineno)d'
+        ),
         encoding='UTF-8',
         handlers=[
-            logging.FileHandler(
-                'logging/main.log',
-                mode='w',
-                encoding='UTF-8'),
-            logging.StreamHandler(sys.stdout)]
+            logging.FileHandler('logging/log.log', mode='w', encoding='UTF-8'),
+            logging.StreamHandler(sys.stdout),
+        ],
     )
     main()
